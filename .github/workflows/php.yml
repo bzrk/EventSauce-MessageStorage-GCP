@@ -18,7 +18,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_version }}
-          extensions: phar
+          extensions: phar, grpc
           coverage: none
           tools: composer:v2
 
