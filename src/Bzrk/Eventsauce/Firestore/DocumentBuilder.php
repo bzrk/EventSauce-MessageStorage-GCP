@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Bzrk\Eventsauce\Firestore;
 
@@ -10,17 +12,18 @@ use Ramsey\Uuid\Uuid;
 
 class DocumentBuilder
 {
-    const VERSION      = 'version';
-    const EVENT        = 'event';
-    const AGGREGATE    = 'aggregate';
-    const AGGREGATE_ID = 'aggregateId';
-    const RECORDED_AT  = 'recordedAt';
+    public const VERSION      = 'version';
+    public const EVENT        = 'event';
+    public const AGGREGATE    = 'aggregate';
+    public const AGGREGATE_ID = 'aggregateId';
+    public const RECORDED_AT  = 'recordedAt';
 
     public function __construct(private readonly MessageSerializer $serializer)
     {
     }
 
-    public function toDocument(Message $msg): Document {
+    public function toDocument(Message $msg): Document
+    {
         $payload = $this->serializer->serializeMessage($msg);
         $payload['headers'][Header::EVENT_ID] ??= Uuid::uuid4()->toString();
         $payload[self::AGGREGATE] = $payload['headers'][Header::AGGREGATE_ROOT_TYPE];
@@ -36,11 +39,13 @@ class DocumentBuilder
         );
     }
 
-    public function fromDocument(Document $document): Message {
+    public function fromDocument(Document $document): Message
+    {
         return $this->serializer->unserializePayload($document->payload);
     }
 
-    public function fromDocumentSnapshot(DocumentSnapshot $snapshot): Document {
+    public function fromDocumentSnapshot(DocumentSnapshot $snapshot): Document
+    {
         $data = $snapshot->data();
         $aggregateId = $data[self::AGGREGATE_ID];
         return new Document($aggregateId, $snapshot->id(), $data);

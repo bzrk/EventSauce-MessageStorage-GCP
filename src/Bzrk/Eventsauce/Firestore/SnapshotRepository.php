@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Bzrk\Eventsauce\Firestore;
 
@@ -14,7 +16,7 @@ class SnapshotRepository implements ISnapshotRepository
 {
     public function __construct(
         private readonly FirestoreClient $client,
-        private readonly string          $collection,
+        private readonly string $collection,
     ) {
     }
 

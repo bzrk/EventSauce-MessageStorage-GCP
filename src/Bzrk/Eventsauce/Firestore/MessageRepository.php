@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Bzrk\Eventsauce\Firestore;
 
@@ -15,14 +17,14 @@ use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Firestore\QuerySnapshot;
 use Google\Cloud\Firestore\Transaction;
 
-class MessageRepository implements IMessageRepository {
-
+class MessageRepository implements IMessageRepository
+{
     private DocumentBuilder $builder;
 
     public function __construct(
         private readonly FirestoreClient $client,
-        private readonly string          $collection,
-        MessageSerializer                $serializer
+        private readonly string $collection,
+        MessageSerializer $serializer
     ) {
         $this->builder = new DocumentBuilder($serializer);
     }
@@ -37,8 +39,9 @@ class MessageRepository implements IMessageRepository {
             ->each(fn(Document $doc) => $this->store($doc));
     }
 
-    private function store(Document $doc) {
-        $this->client->runTransaction( function(Transaction $transaction) use ($doc) {
+    private function store(Document $doc): void
+    {
+        $this->client->runTransaction(function (Transaction $transaction) use ($doc) {
             $collection = $this->client->collection($this->collection);
 
             $docCount = $collection->where(DocumentBuilder::AGGREGATE_ID, '=', $doc->aggregateId)
@@ -85,7 +88,8 @@ class MessageRepository implements IMessageRepository {
     /**
      * @throws StreamException
      */
-    private function map(QuerySnapshot $snapshot) : Generator {
+    private function map(QuerySnapshot $snapshot): Generator
+    {
         return Streams::of($snapshot->getIterator())
             ->map(fn(DocumentSnapshot $snapshot) => $this->builder->fromDocumentSnapshot($snapshot))
             ->map(fn(Document $doc) => $this->builder->fromDocument($doc))

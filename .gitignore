@@ -1,2 +1,3 @@
 credentials
 vendor
+.phpunit.result.cache
