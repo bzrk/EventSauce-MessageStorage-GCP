@@ -1,0 +1,26 @@
+{
+  "name": "bzrk/eventsauce-firestore",
+  "description": "EventSauce's storage implementations for google firestore",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Thomas Wünsche"
+    }
+  ],
+  "require": {
+    "eventsauce/eventsauce": "^3.0",
+    "eventsauce/backoff": "^1.0",
+    "google/cloud-firestore": "^1.25",
+    "bzrk/php-stream": "^0.15.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "phpstan/phpstan": "0.12.94",
+    "ramsey/uuid": "*"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Bzrk\\Eventsauce\\Firestore\\": "src/Bzrk/Eventsauce/Firestore"
+    }
+  }
+}
