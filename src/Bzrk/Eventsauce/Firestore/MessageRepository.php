@@ -103,6 +103,7 @@ class MessageRepository implements IMessageRepository
     {
         return $this->map(
             $this->client->collection($this->collection)
+            ->where(DocumentBuilder::RECORDED_AT, '>', $cursor->toString())
             ->orderBy(DocumentBuilder::RECORDED_AT)
             ->documents()
         );

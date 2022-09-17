@@ -2,8 +2,8 @@
         bootstrap="tests/bootstrap.php"
 >
     <testsuites>
-        <testsuite name="tests">
-            <directory>tests</directory>
+        <testsuite name="default">
+            <directory>tests/Bzrk/Eventsauce/Firestore</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,0 +1,22 @@
+version: "3.0"
+services:
+  php:
+    image: eventsauce-firestore-php
+    build: docker/php
+    container_name: eventsauce-firestore-php
+    working_dir: /app
+    volumes:
+      - "./:/app"
+    restart: "no"
+    environment:
+      FIRESTORE_EMULATOR_HOST: firestore:8080
+      FIRESTORE_PROJECT_ID: eventsauce
+  firestore:
+    image: mtlynch/firestore-emulator-docker
+    container_name: eventsauce-firestore-emulator
+    environment:
+      PORT: 8080
+      FIRESTORE_PROJECT_ID: eventsauce
+    ports:
+      - "8080:8080"
+

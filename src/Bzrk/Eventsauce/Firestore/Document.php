@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Bzrk\Eventsauce\Firestore;
 
+use Webmozart\Assert\Assert;
+
 class Document
 {
     /**
@@ -20,6 +22,8 @@ class Document
 
     public function version(): int
     {
+        Assert::keyExists($this->payload, DocumentBuilder::VERSION);
+
         return (int) $this->payload[DocumentBuilder::VERSION];
     }
 }

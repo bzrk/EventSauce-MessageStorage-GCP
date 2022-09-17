@@ -9,10 +9,23 @@ jobs:
       matrix:
         php_version: [ 8.1 ]
     runs-on: ubuntu-latest
-
+    env:
+      FIRESTORE_EMULATOR_HOST: localhost:8080
+      FIRESTORE_PROJECT_ID: eventsauce
+    services:
+      firestore:
+        image: mtlynch/firestore-emulator-docker
+        env:
+          PORT: 8080
+          FIRESTORE_PROJECT_ID: eventsauce
+        ports:
+          - 8080:8080
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Show Env Variables
+        run: echo $FIRESTORE_EMULATOR_HOST; echo $FIRESTORE_PROJECT_ID
 
       - name: Verify
         uses: shivammathur/setup-php@v2
