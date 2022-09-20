@@ -2,6 +2,7 @@
   "name": "bzrk/eventsauce-firestore",
   "description": "EventSauce's storage implementations for google firestore",
   "license": "MIT",
+  "keywords": ["eventsauce", "eventsource", "firestore", "php", "eventstore", "snapshotstore"],
   "authors": [
     {
       "name": "Thomas Wünsche"

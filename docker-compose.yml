@@ -11,6 +11,7 @@ services:
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
       FIRESTORE_PROJECT_ID: eventsauce
+    command: composer install
   firestore:
     image: mtlynch/firestore-emulator-docker
     container_name: eventsauce-firestore-emulator

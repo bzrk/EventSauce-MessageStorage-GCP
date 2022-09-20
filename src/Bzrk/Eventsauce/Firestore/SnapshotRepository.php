@@ -26,7 +26,7 @@ class SnapshotRepository implements ISnapshotRepository
             ->collection($this->collection)
             ->document(Uuid::uuid4()->toString())
             ->set([
-                'aggregateId' => $snapshot->aggregateRootId(),
+                'aggregateId' => $snapshot->aggregateRootId()->toString(),
                 'version' => $snapshot->aggregateRootVersion(),
                 'state' => $snapshot->state()
             ]);
