@@ -7,6 +7,7 @@ namespace Bzrk\Eventsauce\Firestore;
 use BZRK\PHPStream\StreamException;
 use BZRK\PHPStream\Streams;
 use EventSauce\EventSourcing\AggregateRootId;
+use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository as IMessageRepository;
 use EventSauce\EventSourcing\PaginationCursor;
@@ -101,11 +102,14 @@ class MessageRepository implements IMessageRepository
      */
     public function paginate(PaginationCursor $cursor): Generator
     {
-        return $this->map(
-            $this->client->collection($this->collection)
+        $snapshot = $this->client->collection($this->collection)
             ->where(DocumentBuilder::RECORDED_AT, '>', $cursor->toString())
             ->orderBy(DocumentBuilder::RECORDED_AT)
-            ->documents()
-        );
+            ->documents();
+
+        return Streams::of($snapshot->getIterator())
+            ->map(fn(DocumentSnapshot $snapshot) => $this->builder->fromDocumentSnapshot($snapshot))
+            ->map(fn(Document $doc) => $this->builder->fromDocument($doc))
+            ->toGenerator(fn(Message $msg) => FirestoreCursor::fromString($msg->headers()[Header::TIME_OF_RECORDING]));
     }
 }

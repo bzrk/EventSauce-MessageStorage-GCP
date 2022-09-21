@@ -230,11 +230,14 @@ class MessageRepositoryTest extends TestCase
     {
         $this->initForRetrieveOrPaginate();
 
+        $generator = $this->messageRepository->paginate(new FirestoreCursor('2022-09-17 12:12:57.433743+0200'));
+
         /** @var Message[] $messages */
-        $messages = Streams::of(
-            $this->messageRepository->paginate(new FirestoreCursor('2022-09-17 12:12:57.433743+0200'))
-        )->map(fn(Message $msg) => [$msg->aggregateRootId()->toString(), $msg->timeOfRecording()->getTimestamp()])
+        $messages = Streams::of($generator)
+            ->map(fn(Message $msg) => [$msg->aggregateRootId()->toString(), $msg->timeOfRecording()->getTimestamp()])
             ->toList();
+
+        $newCursor = $generator->getReturn();
 
         self::assertEquals(
             [
@@ -244,6 +247,9 @@ class MessageRepositoryTest extends TestCase
             ],
             $messages
         );
+
+        self::assertInstanceOf(FirestoreCursor::class, $newCursor);
+        self::assertEquals('2022-09-17 12:14:57.433743+0200', $newCursor->toString());
     }
 
     private function initForRetrieveOrPaginate(): void
