@@ -1,9 +1,9 @@
 version: "3.0"
 services:
   php:
-    image: eventsauce-firestore-php
+    image: eventsauce-messagestorage-gcp-php
     build: docker/php
-    container_name: eventsauce-firestore-php
+    container_name: eventsauce-messagestorage-gcp-php
     working_dir: /app
     volumes:
       - "./:/app"
@@ -14,7 +14,7 @@ services:
     command: composer install
   firestore:
     image: mtlynch/firestore-emulator-docker
-    container_name: eventsauce-firestore-emulator
+    container_name: eventsauce-messagestorage-gcp-firestore-emulator
     environment:
       PORT: 8080
       FIRESTORE_PROJECT_ID: eventsauce
