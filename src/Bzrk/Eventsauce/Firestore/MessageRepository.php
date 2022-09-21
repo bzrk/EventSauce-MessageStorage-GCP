@@ -105,6 +105,7 @@ class MessageRepository implements IMessageRepository
         $snapshot = $this->client->collection($this->collection)
             ->where(DocumentBuilder::RECORDED_AT, '>', $cursor->toString())
             ->orderBy(DocumentBuilder::RECORDED_AT)
+            ->limit(1000)
             ->documents();
 
         return Streams::of($snapshot->getIterator())
