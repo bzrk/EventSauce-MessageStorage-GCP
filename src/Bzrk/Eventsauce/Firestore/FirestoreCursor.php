@@ -8,7 +8,7 @@ use EventSauce\EventSourcing\PaginationCursor;
 
 final class FirestoreCursor implements PaginationCursor
 {
-    public function __construct(public readonly string $value)
+    private function __construct(private readonly string $value, private readonly bool $isAtStart)
     {
     }
 
@@ -19,12 +19,16 @@ final class FirestoreCursor implements PaginationCursor
 
     public static function fromString(string $cursor): static
     {
-        return new static($cursor);
+        return new static($cursor, false);
+    }
+
+    public static function fromStart(): static
+    {
+        return new static('', true);
     }
 
     public function isAtStart(): bool
     {
-        // TODO: Implement isAtStart() method.
-        return false;
+        return $this->isAtStart;
     }
 }

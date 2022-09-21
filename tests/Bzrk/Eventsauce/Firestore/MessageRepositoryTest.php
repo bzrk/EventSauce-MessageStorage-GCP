@@ -230,7 +230,7 @@ class MessageRepositoryTest extends TestCase
     {
         $this->initForRetrieveOrPaginate();
 
-        $generator = $this->messageRepository->paginate(new FirestoreCursor('2022-09-17 12:12:57.433743+0200'));
+        $generator = $this->messageRepository->paginate(FirestoreCursor::fromString('2022-09-17 12:12:57.433743+0200'));
 
         /** @var Message[] $messages */
         $messages = Streams::of($generator)
