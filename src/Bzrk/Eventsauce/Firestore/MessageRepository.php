@@ -114,7 +114,8 @@ class MessageRepository implements IMessageRepository
             ->toGenerator(
                 fn(Message $msg) => FirestoreCursor::fromString(
                     $msg->timeOfRecording()->format('U.u')
-                )
+                ),
+                FirestoreCursor::fromString($cursor->toString())
             );
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5f3e28d8f1a5a03cdfe423927b9fc18",
+    "content-hash": "bc92fe7026eef288cdb070e83dd7976f",
     "packages": [
         {
             "name": "brick/math",
@@ -64,16 +64,16 @@
         },
         {
             "name": "bzrk/php-stream",
-            "version": "0.15",
+            "version": "0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bzrk/php-stream.git",
-                "reference": "c680f99b14d76dc733347fb69ac3ec2408d887e9"
+                "reference": "0d1f111c74f180f5a88e5a3950cbf123461b7df2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bzrk/php-stream/zipball/c680f99b14d76dc733347fb69ac3ec2408d887e9",
-                "reference": "c680f99b14d76dc733347fb69ac3ec2408d887e9",
+                "url": "https://api.github.com/repos/bzrk/php-stream/zipball/0d1f111c74f180f5a88e5a3950cbf123461b7df2",
+                "reference": "0d1f111c74f180f5a88e5a3950cbf123461b7df2",
                 "shasum": ""
             },
             "require": {
@@ -111,9 +111,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bzrk/php-stream/issues",
-                "source": "https://github.com/bzrk/php-stream/tree/0.15"
+                "source": "https://github.com/bzrk/php-stream/tree/0.16"
             },
-            "time": "2022-09-07T12:43:42+00:00"
+            "time": "2022-09-21T12:51:18+00:00"
         },
         {
             "name": "eventsauce/clock",

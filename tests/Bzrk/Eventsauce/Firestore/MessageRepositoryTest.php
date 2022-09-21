@@ -252,6 +252,29 @@ class MessageRepositoryTest extends TestCase
         self::assertEquals('1663409637.433743', $newCursor->toString());
     }
 
+    /**
+     * @throws StreamException
+     */
+    public function testPaginateHandleEmptyResult(): void
+    {
+        $this->initForRetrieveOrPaginate();
+
+        $generator = $this->messageRepository->paginate(FirestoreCursor::fromString('1663409638.433743'));
+
+        /** @var Message[] $messages */
+        $messages = Streams::of($generator)
+            ->map(fn(Message $msg) => [$msg->aggregateRootId()->toString(), $msg->timeOfRecording()->getTimestamp()])
+            ->toList();
+
+        $newCursor = $generator->getReturn();
+
+        self::assertEquals([], $messages);
+
+        self::assertInstanceOf(FirestoreCursor::class, $newCursor);
+        self::assertEquals('1663409638.433743', $newCursor->toString());
+        self::assertEquals(false, $newCursor->isAtStart());
+    }
+
     private function initForRetrieveOrPaginate(): void
     {
         Streams::range(1, 4)
