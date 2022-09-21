@@ -16,7 +16,7 @@ class DocumentBuilder
     public const EVENT        = 'event';
     public const AGGREGATE    = 'aggregate';
     public const AGGREGATE_ID = 'aggregateId';
-    public const RECORDED_AT  = 'recordedAt';
+    public const TIMESTAMP    = 'timestamp';
 
     public function __construct(private readonly MessageSerializer $serializer)
     {
@@ -30,7 +30,7 @@ class DocumentBuilder
         $payload[self::VERSION] = $payload['headers'][Header::AGGREGATE_ROOT_VERSION];
         $payload[self::EVENT] = $payload['headers'][Header::EVENT_TYPE];
         $payload[self::AGGREGATE_ID] = $payload['headers'][Header::AGGREGATE_ROOT_ID];
-        $payload[self::RECORDED_AT] = $payload['headers'][Header::TIME_OF_RECORDING];
+        $payload[self::TIMESTAMP] = $msg->timeOfRecording()->format('U.u');
 
         return new Document(
             $msg->aggregateRootId()->toString(),

@@ -56,7 +56,7 @@ class MessageRepositoryTest extends TestCase
                     Header::AGGREGATE_ROOT_VERSION => 1,
                     Header::EVENT_TYPE => "bzrk.eventsauce.test.firestore.dummy_event",
                     Header::AGGREGATE_ROOT_ID => new DummyId("1-1-1-2"),
-                    Header::TIME_OF_RECORDING => "2022-09-12 12:13:14.1234"
+                    Header::TIME_OF_RECORDING => "2022-09-12 12:13:14.728749+0200"
                 ]
             ),
             new Message(
@@ -67,7 +67,7 @@ class MessageRepositoryTest extends TestCase
                     Header::AGGREGATE_ROOT_VERSION => 1,
                     Header::EVENT_TYPE => "bzrk.eventsauce.test.firestore.dummy_event",
                     Header::AGGREGATE_ROOT_ID => new DummyId("1-1-2-2"),
-                    Header::TIME_OF_RECORDING => "2022-09-12 12:13:15.1234"
+                    Header::TIME_OF_RECORDING => "2022-09-12 12:13:15.728749+0200"
                 ]
             ),
         ];
@@ -84,7 +84,7 @@ class MessageRepositoryTest extends TestCase
                 'headers' => [
                     Header::AGGREGATE_ROOT_TYPE => 'type',
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
-                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.1234',
+                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.728749+0200',
                     Header::AGGREGATE_ROOT_VERSION => 1,
                     Header::EVENT_ID  => '1-1-1-1',
                     Header::AGGREGATE_ROOT_ID => '1-1-1-2',
@@ -94,7 +94,7 @@ class MessageRepositoryTest extends TestCase
                 'aggregate' => 'type',
                 'aggregateId' => '1-1-1-2',
                 'payload' => ['a' => 'b'],
-                'recordedAt' => '2022-09-12 12:13:14.1234',
+                'timestamp' => '1662977594.728749',
                 'event' => 'bzrk.eventsauce.test.firestore.dummy_event'
             ],
             $docs[0]->snapshot()->data()
@@ -105,7 +105,7 @@ class MessageRepositoryTest extends TestCase
                 'headers' => [
                     Header::AGGREGATE_ROOT_TYPE => 'type',
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
-                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:15.1234',
+                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:15.728749+0200',
                     Header::AGGREGATE_ROOT_VERSION => 1,
                     Header::EVENT_ID  => '1-1-2-1',
                     Header::AGGREGATE_ROOT_ID => '1-1-2-2',
@@ -115,7 +115,7 @@ class MessageRepositoryTest extends TestCase
                 'aggregate' => 'type',
                 'aggregateId' => '1-1-2-2',
                 'payload' => ['b' => 'c'],
-                'recordedAt' => '2022-09-12 12:13:15.1234',
+                'timestamp' => '1662977595.728749',
                 'event' => 'bzrk.eventsauce.test.firestore.dummy_event'
             ],
             $docs[1]->snapshot()->data()
@@ -132,7 +132,7 @@ class MessageRepositoryTest extends TestCase
                 'headers' => [
                     Header::AGGREGATE_ROOT_TYPE => 'type',
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
-                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.1234',
+                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.728749+0200',
                     Header::AGGREGATE_ROOT_VERSION => 1,
                     Header::EVENT_ID  => '1-1-1-1',
                     Header::AGGREGATE_ROOT_ID => '1-1-1-2',
@@ -142,7 +142,7 @@ class MessageRepositoryTest extends TestCase
                 'aggregate' => 'type',
                 'aggregateId' => '1-1-1-2',
                 'payload' => ['a' => 'b'],
-                'recordedAt' => '2022-09-12 12:13:14.1234',
+                'timestamp' => '1662977595.728749',
                 'event' => 'bzrk.eventsauce.test.firestore.dummy_event'
             ]
         );
@@ -155,7 +155,7 @@ class MessageRepositoryTest extends TestCase
                 Header::AGGREGATE_ROOT_VERSION => 1,
                 Header::EVENT_TYPE => "bzrk.eventsauce.test.firestore.dummy_event",
                 Header::AGGREGATE_ROOT_ID => new DummyId('1-1-1-2'),
-                Header::TIME_OF_RECORDING => "2022-09-12 12:13:14.1234"
+                Header::TIME_OF_RECORDING => "2022-09-12 12:13:14.728749+0200"
             ]
         );
 
@@ -230,7 +230,7 @@ class MessageRepositoryTest extends TestCase
     {
         $this->initForRetrieveOrPaginate();
 
-        $generator = $this->messageRepository->paginate(FirestoreCursor::fromString('2022-09-17 12:12:57.433743+0200'));
+        $generator = $this->messageRepository->paginate(FirestoreCursor::fromString('12.433743'));
 
         /** @var Message[] $messages */
         $messages = Streams::of($generator)
@@ -242,14 +242,14 @@ class MessageRepositoryTest extends TestCase
         self::assertEquals(
             [
                 ['1-1-1-1', 1663409637],
-                ['2-1-1-1', 1663409637],
                 ['1-1-1-1', 1663409697],
+                ['2-1-1-1', 1663409637],
             ],
             $messages
         );
 
         self::assertInstanceOf(FirestoreCursor::class, $newCursor);
-        self::assertEquals('2022-09-17 12:14:57.433743+0200', $newCursor->toString());
+        self::assertEquals('1663409637.433743', $newCursor->toString());
     }
 
     private function initForRetrieveOrPaginate(): void
@@ -273,7 +273,7 @@ class MessageRepositoryTest extends TestCase
                             'aggregate' => 'type',
                             'aggregateId' => "1-1-1-1",
                             'payload' => ['a' => 'b'],
-                            'recordedAt' => "2022-09-17 12:1{$cnt}:57.433743+0200",
+                            'timestamp' => "1{$cnt}.433743",
                             'event' => 'eventType'
                         ]
                     );
@@ -296,7 +296,7 @@ class MessageRepositoryTest extends TestCase
                     'aggregate' => 'type',
                     'aggregateId' => "2-1-1-1",
                     'payload' => ['a' => 'b'],
-                    'recordedAt' => "2022-09-17 12:13:57.433743+0200",
+                    'timestamp' => "1663409637.433743",
                     'event' => 'bzrk.eventsauce.test.firestore.dummy_event'
                 ]
             );

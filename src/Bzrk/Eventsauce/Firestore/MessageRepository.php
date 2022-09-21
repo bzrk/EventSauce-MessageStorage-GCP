@@ -103,14 +103,18 @@ class MessageRepository implements IMessageRepository
     public function paginate(PaginationCursor $cursor): Generator
     {
         $snapshot = $this->client->collection($this->collection)
-            ->where(DocumentBuilder::RECORDED_AT, '>', $cursor->toString())
-            ->orderBy(DocumentBuilder::RECORDED_AT)
+            ->where(DocumentBuilder::TIMESTAMP, '>', $cursor->toString())
+            ->orderBy(DocumentBuilder::TIMESTAMP)
             ->limit(1000)
             ->documents();
 
         return Streams::of($snapshot->getIterator())
             ->map(fn(DocumentSnapshot $snapshot) => $this->builder->fromDocumentSnapshot($snapshot))
             ->map(fn(Document $doc) => $this->builder->fromDocument($doc))
-            ->toGenerator(fn(Message $msg) => FirestoreCursor::fromString($msg->headers()[Header::TIME_OF_RECORDING]));
+            ->toGenerator(
+                fn(Message $msg) => FirestoreCursor::fromString(
+                    $msg->timeOfRecording()->format('U.u')
+                )
+            );
     }
 }
