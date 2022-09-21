@@ -88,7 +88,8 @@ class MessageRepositoryTest extends TestCase
                     Header::AGGREGATE_ROOT_VERSION => 1,
                     Header::EVENT_ID  => '1-1-1-1',
                     Header::AGGREGATE_ROOT_ID => '1-1-1-2',
-                    Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id'
+                    Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
+                    DocumentBuilder::TIMESTAMP => '1662977594.728749'
                 ],
                 'version' => 1,
                 'aggregate' => 'type',
@@ -109,7 +110,8 @@ class MessageRepositoryTest extends TestCase
                     Header::AGGREGATE_ROOT_VERSION => 1,
                     Header::EVENT_ID  => '1-1-2-1',
                     Header::AGGREGATE_ROOT_ID => '1-1-2-2',
-                    Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id'
+                    Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
+                    DocumentBuilder::TIMESTAMP => '1662977595.728749'
                 ],
                 'version' => 1,
                 'aggregate' => 'type',
@@ -136,7 +138,8 @@ class MessageRepositoryTest extends TestCase
                     Header::AGGREGATE_ROOT_VERSION => 1,
                     Header::EVENT_ID  => '1-1-1-1',
                     Header::AGGREGATE_ROOT_ID => '1-1-1-2',
-                    Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id'
+                    Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
+                    DocumentBuilder::TIMESTAMP => '1662977595.728749'
                 ],
                 'version' => 1,
                 'aggregate' => 'type',
@@ -185,6 +188,7 @@ class MessageRepositoryTest extends TestCase
                 Header::EVENT_ID => '1-1-1-1',
                 Header::AGGREGATE_ROOT_ID => new DummyId('1-1-1-1'),
                 Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
+                DocumentBuilder::TIMESTAMP => '11.433743'
             ],
             $messages[0]->headers()
         );
@@ -216,6 +220,7 @@ class MessageRepositoryTest extends TestCase
                 Header::EVENT_ID => '1-1-1-3',
                 Header::AGGREGATE_ROOT_ID => new DummyId('1-1-1-1'),
                 Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
+                DocumentBuilder::TIMESTAMP => '13.433743'
             ],
             $messages[0]->headers()
         );
@@ -290,7 +295,8 @@ class MessageRepositoryTest extends TestCase
                                 Header::AGGREGATE_ROOT_VERSION => $cnt,
                                 Header::EVENT_ID  => "1-1-1-$cnt",
                                 Header::AGGREGATE_ROOT_ID => "1-1-1-1",
-                                Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id'
+                                Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
+                                DocumentBuilder::TIMESTAMP => "1{$cnt}.433743",
                             ],
                             'version' => $cnt,
                             'aggregate' => 'type',
@@ -313,7 +319,8 @@ class MessageRepositoryTest extends TestCase
                         Header::AGGREGATE_ROOT_VERSION => 1,
                         Header::EVENT_ID  => "2-1-1-1",
                         Header::AGGREGATE_ROOT_ID => "2-1-1-1",
-                        Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id'
+                        Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
+                        DocumentBuilder::TIMESTAMP => "1663409637.433743",
                     ],
                     'version' => 1,
                     'aggregate' => 'type',

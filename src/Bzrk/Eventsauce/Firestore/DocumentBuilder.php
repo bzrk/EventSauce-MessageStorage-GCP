@@ -26,11 +26,12 @@ class DocumentBuilder
     {
         $payload = $this->serializer->serializeMessage($msg);
         $payload['headers'][Header::EVENT_ID] ??= Uuid::uuid4()->toString();
+        $payload['headers'][self::TIMESTAMP] = $msg->timeOfRecording()->format('U.u');
         $payload[self::AGGREGATE] = $payload['headers'][Header::AGGREGATE_ROOT_TYPE];
         $payload[self::VERSION] = $payload['headers'][Header::AGGREGATE_ROOT_VERSION];
         $payload[self::EVENT] = $payload['headers'][Header::EVENT_TYPE];
         $payload[self::AGGREGATE_ID] = $payload['headers'][Header::AGGREGATE_ROOT_ID];
-        $payload[self::TIMESTAMP] = $msg->timeOfRecording()->format('U.u');
+        $payload[self::TIMESTAMP] = $payload['headers'][self::TIMESTAMP];
 
         return new Document(
             $msg->aggregateRootId()->toString(),

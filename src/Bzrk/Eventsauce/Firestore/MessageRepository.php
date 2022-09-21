@@ -112,9 +112,7 @@ class MessageRepository implements IMessageRepository
             ->map(fn(DocumentSnapshot $snapshot) => $this->builder->fromDocumentSnapshot($snapshot))
             ->map(fn(Document $doc) => $this->builder->fromDocument($doc))
             ->toGenerator(
-                fn(Message $msg) => FirestoreCursor::fromString(
-                    $msg->timeOfRecording()->format('U.u')
-                ),
+                fn(Message $msg) => FirestoreCursor::fromString($msg->header(DocumentBuilder::TIMESTAMP)),
                 FirestoreCursor::fromString($cursor->toString())
             );
     }
