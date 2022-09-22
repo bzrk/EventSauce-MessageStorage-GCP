@@ -1,6 +1,6 @@
 {
   "name": "bzrk/eventsauce-messagestorage-gcp",
-  "description": "EventSauce's storage implementations for google firestore",
+  "description": "Implementation of EventSauce Message- and SnapshotRepository for Google Firestore and Google Datastore",
   "license": "MIT",
   "keywords": ["eventsauce", "eventsource", "firestore", "datastore", "php", "eventstore", "snapshotstore", "gcp", "google"],
   "authors": [
