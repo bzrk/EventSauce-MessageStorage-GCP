@@ -2,39 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Bzrk\Eventsauce\Firestore;
+namespace Bzrk\Eventsauce\Gcp\Datastore;
 
 use Bzrk\Eventsauce\Test\Firestore\DummyId;
 use BZRK\PHPStream\StreamException;
 use BZRK\PHPStream\Streams;
-use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\EventSourcing\Snapshotting\Snapshot;
-use Google\Cloud\Firestore\CollectionReference;
-use Google\Cloud\Firestore\DocumentReference;
-use Google\Cloud\Firestore\FirestoreClient;
+use Google\Cloud\Datastore\DatastoreClient;
+use Google\Cloud\Datastore\Entity;
 use PHPUnit\Framework\TestCase;
 
 class SnapshotRepositoryTest extends TestCase
 {
     private const COLLECTION = "snapshots";
 
-    private CollectionReference $collectionReference;
+    private DatastoreClient $datastoreClient;
+
     private SnapshotRepository $snapshotRepository;
 
     /**
-     * @before
      * @throws StreamException
      */
     protected function setUp(): void
     {
-        $firestoreClient = new FirestoreClient();
-        $this->collectionReference = $firestoreClient->collection(self::COLLECTION);
-        Streams::of($this->collectionReference->listDocuments())->each(
-            fn(DocumentReference $doc) => $doc->delete()
+        $this->datastoreClient = new DatastoreClient();
+        Streams::of($this->datastoreClient->runQuery($this->datastoreClient->query()))->each(
+            fn(Entity $entity) => $this->datastoreClient->delete($entity->key())
         );
 
         $this->snapshotRepository = new SnapshotRepository(
-            $firestoreClient,
+            $this->datastoreClient,
             self::COLLECTION
         );
     }
@@ -53,27 +50,29 @@ class SnapshotRepositoryTest extends TestCase
         );
         $this->snapshotRepository->persist($snapShot);
 
-        /** @var DocumentReference[] $docs */
-        $docs = Streams::of($this->collectionReference->listDocuments())->toList();
+        /** @var Entity[] $entities */
+        $entities = Streams::of($this->datastoreClient->runQuery($this->datastoreClient->query()))->toList();
 
-        self::assertCount(1, $docs);
-        self::assertEquals(10, $docs[0]->snapshot()->data()['version']);
-        self::assertEquals('1-1-1-1', $docs[0]->snapshot()->data()['aggregateId']);
-        self::assertEquals($state, $docs[0]->snapshot()->data()['state']);
+        self::assertCount(1, $entities);
+        self::assertEquals('1-1-1-1::10', $entities[0]->key()->pathEndIdentifier());
+        self::assertEquals(10, $entities[0]->get()['version']);
+        self::assertEquals('1-1-1-1', $entities[0]->get()['aggregateId']);
+        self::assertEquals($state, $entities[0]->get()['state']);
     }
 
     public function testRetrieveNotFoundASnapshot(): void
     {
         Streams::range(1, 2)->each(
-            fn(int $cnt) => $this->collectionReference
-                ->document("2-2-2-$cnt")
-                ->set(
+            fn(int $cnt) => $this->datastoreClient->insert(
+                $this->datastoreClient->entity(
+                    $this->datastoreClient->key(self::COLLECTION, "1-1-1-2::$cnt"),
                     [
                         'version' => $cnt,
                         'aggregateId' => '1-1-1-2',
                         'state' => ['v' => $cnt]
                     ]
                 )
+            )
         );
 
         self::assertNull($this->snapshotRepository->retrieve(new DummyId('1-1-1-1')));
@@ -82,15 +81,16 @@ class SnapshotRepositoryTest extends TestCase
     public function testRetrieve(): void
     {
         Streams::range(1, 5)->each(
-            fn(int $cnt) => $this->collectionReference
-                ->document("2-2-2-$cnt")
-                ->set(
+            fn(int $cnt) => $this->datastoreClient->insert(
+                $this->datastoreClient->entity(
+                    $this->datastoreClient->key(self::COLLECTION, "1-1-1-1::$cnt"),
                     [
                         'version' => $cnt,
                         'aggregateId' => '1-1-1-1',
                         'state' => ['v' => $cnt]
                     ]
                 )
+            )
         );
 
         $snapShot = $this->snapshotRepository->retrieve(new DummyId('1-1-1-1'));

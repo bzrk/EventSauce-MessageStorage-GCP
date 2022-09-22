@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42a72d1cc5b6764588746c34d3e67a09",
+    "content-hash": "aad0d0f9e1eebfe80203b0a22a16960b",
     "packages": [
         {
             "name": "brick/math",
@@ -483,6 +483,57 @@
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
                 "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.47.2"
+            },
+            "time": "2022-08-23T20:22:22+00:00"
+        },
+        {
+            "name": "google/cloud-datastore",
+            "version": "v1.16.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/google-cloud-php-datastore.git",
+                "reference": "0b11c8e16713a9626580cd1f01253ee9cdeb20ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-datastore/zipball/0b11c8e16713a9626580cd1f01253ee9cdeb20ca",
+                "reference": "0b11c8e16713a9626580cd1f01253ee9cdeb20ca",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-core": "^1.43",
+                "google/gax": "^1.1"
+            },
+            "require-dev": {
+                "erusev/parsedown": "^1.6",
+                "phpdocumentor/reflection": "^3.0||^4.0",
+                "phpspec/prophecy": "^1.10.3",
+                "phpunit/phpunit": "^4.8|^5.0|^8.0",
+                "squizlabs/php_codesniffer": "2.*",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "component": {
+                    "id": "cloud-datastore",
+                    "target": "googleapis/google-cloud-php-datastore.git",
+                    "path": "Datastore",
+                    "entry": "src/DatastoreClient.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Google\\Cloud\\Datastore\\": "src",
+                    "GPBMetadata\\Google\\Datastore\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Cloud Datastore Client for PHP",
+            "support": {
+                "source": "https://github.com/googleapis/google-cloud-php-datastore/tree/v1.16.2"
             },
             "time": "2022-08-23T20:22:22+00:00"
         },

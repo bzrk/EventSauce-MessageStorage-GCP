@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Bzrk\Eventsauce\Firestore;
+namespace Bzrk\Eventsauce\Gcp;
 
 use PHPUnit\Framework\TestCase;
 
-class FirestoreCursorTest extends TestCase
+class CursorTest extends TestCase
 {
     public function testFromStart(): void
     {
-        $cursor = FirestoreCursor::fromStart();
+        $cursor = Cursor::fromStart();
 
-        self::assertEquals('', $cursor->toString());
+        self::assertEquals('0', $cursor->toString());
         self::assertTrue($cursor->isAtStart());
     }
 
     public function testFromString(): void
     {
-        $cursor = FirestoreCursor::fromString("foobar");
+        $cursor = Cursor::fromString("foobar");
 
         self::assertEquals('foobar', $cursor->toString());
         self::assertFalse($cursor->isAtStart());

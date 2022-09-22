@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Bzrk\Eventsauce\Firestore;
+namespace Bzrk\Eventsauce\Gcp;
 
 use EventSauce\EventSourcing\PaginationCursor;
 
-final class FirestoreCursor implements PaginationCursor
+final class Cursor implements PaginationCursor
 {
     private function __construct(private readonly string $value, private readonly bool $isAtStart)
     {
@@ -24,7 +24,7 @@ final class FirestoreCursor implements PaginationCursor
 
     public static function fromStart(): static
     {
-        return new static('', true);
+        return new static('0', true);
     }
 
     public function isAtStart(): bool

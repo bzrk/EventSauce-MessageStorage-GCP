@@ -3,7 +3,7 @@
 >
     <testsuites>
         <testsuite name="default">
-            <directory>tests/Bzrk/Eventsauce/Firestore</directory>
+            <directory>tests/Bzrk/Eventsauce/Gcp</directory>
         </testsuite>
     </testsuites>
 </phpunit>
