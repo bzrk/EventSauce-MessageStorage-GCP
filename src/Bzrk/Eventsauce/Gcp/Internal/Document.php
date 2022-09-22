@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bzrk\Eventsauce\Firestore;
+namespace Bzrk\Eventsauce\Gcp\Internal;
 
 use Webmozart\Assert\Assert;
 

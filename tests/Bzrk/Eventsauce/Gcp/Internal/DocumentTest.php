@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Bzrk\Eventsauce\Firestore;
+namespace Bzrk\Eventsauce\Gcp\Internal;
 
+use Bzrk\Eventsauce\Gcp\Firestore\DocumentBuilder;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 

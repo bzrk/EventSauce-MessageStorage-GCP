@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bzrk\Eventsauce\Firestore;
+namespace Bzrk\Eventsauce\Gcp\Firestore;
 
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Snapshotting\Snapshot;

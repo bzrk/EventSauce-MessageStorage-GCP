@@ -12,6 +12,8 @@ jobs:
     env:
       FIRESTORE_EMULATOR_HOST: localhost:8080
       FIRESTORE_PROJECT_ID: eventsauce
+      DATASTORE_EMULATOR_HOST: localhost:8282
+      DATASTORE_PROJECT_ID: eventsauce
     services:
       firestore:
         image: mtlynch/firestore-emulator-docker
@@ -20,6 +22,13 @@ jobs:
           FIRESTORE_PROJECT_ID: eventsauce
         ports:
           - 8080:8080
+      datastore:
+        image: egymgmbh/datastore-emulator
+        env:
+          PORT: 8282
+          DATASTORE_PROJECT_ID: eventsauce
+        ports:
+          - 8282:8282
     steps:
       - name: Checkout
         uses: actions/checkout@v2

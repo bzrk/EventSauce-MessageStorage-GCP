@@ -11,6 +11,8 @@ services:
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
       FIRESTORE_PROJECT_ID: eventsauce
+      DATASTORE_EMULATOR_HOST: datastore:8282
+      DATASTORE_PROJECT_ID: eventsauce
     command: composer install
   firestore:
     image: mtlynch/firestore-emulator-docker
@@ -20,4 +22,12 @@ services:
       FIRESTORE_PROJECT_ID: eventsauce
     ports:
       - "8080:8080"
+  datastore:
+    image: egymgmbh/datastore-emulator
+    container_name: eventsauce-messagestorage-gcp-datastore-emulator
+    environment:
+      PORT: 8282
+      DATASTORE_PROJECT_ID: eventsauce
+    ports:
+      - "8282:8282"
 

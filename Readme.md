@@ -1,8 +1,9 @@
 # Eventsauce Firestore
 
-Implementation of [EventSauce](https://github.com/EventSaucePHP/EventSauce) Message- and SnapshotRepository for Google Firestore
+Implementation of [EventSauce](https://github.com/EventSaucePHP/EventSauce) 
+Message- and SnapshotRepository for Google Firestore and Google Datastore 
 
-## Usage
+## Usage Firestore
 ```php
 
 $firestoreClient = new FirestoreClient();
@@ -19,11 +20,28 @@ $this->snapshotRepository = new SnapshotRepository(
 );
 ```
 
+## Usage Datastore
+```php
+
+$datastoreClient = new DatastoreClient();
+
+$this->messageRepository = new MessageRepository(
+    $datastoreClient,
+    'collectionForAggregateEvents',
+    new ConstructingMessageSerializer()
+);
+
+$this->snapshotRepository = new SnapshotRepository(
+    $datastoreClient,
+    'collectionForAggregateSnapshots'
+);
+```
+
 ## Running Tests
 ```shell
 // starts needed Containers
 docker-compose up
 
-// tests
-docker-compose run php composer verify
+// running qualtity tools
+docker-compose run php --rm composer verify
 ```

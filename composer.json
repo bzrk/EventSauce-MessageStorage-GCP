@@ -2,7 +2,7 @@
   "name": "bzrk/eventsauce-messagestorage-gcp",
   "description": "EventSauce's storage implementations for google firestore",
   "license": "MIT",
-  "keywords": ["eventsauce", "eventsource", "firestore", "php", "eventstore", "snapshotstore", "gcp", "google"],
+  "keywords": ["eventsauce", "eventsource", "firestore", "datastore", "php", "eventstore", "snapshotstore", "gcp", "google"],
   "authors": [
     {
       "name": "Thomas Wünsche"
@@ -14,7 +14,8 @@
     "google/cloud-firestore": "^1.25",
     "bzrk/php-stream": "^0.16.0",
     "ramsey/uuid": "*",
-    "webmozart/assert": "^1.11"
+    "webmozart/assert": "^1.11",
+    "google/cloud-datastore": "^1.16"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
@@ -23,12 +24,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Bzrk\\Eventsauce\\Firestore\\": "src/Bzrk/Eventsauce/Firestore"
+      "Bzrk\\Eventsauce\\Gcp\\": "src/Bzrk/Eventsauce/Gcp"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Bzrk\\Eventsauce\\Test\\Firestore\\": "tests/Bzrk/Eventsauce/Test/Firestore"
+      "Bzrk\\Eventsauce\\Test\\": "tests/Bzrk/Eventsauce/Test"
     }
   },
   "scripts": {

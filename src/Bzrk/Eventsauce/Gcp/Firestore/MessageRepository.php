@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Bzrk\Eventsauce\Firestore;
+namespace Bzrk\Eventsauce\Gcp\Firestore;
 
+use Bzrk\Eventsauce\Gcp\Cursor;
+use Bzrk\Eventsauce\Gcp\VersionConstraintException;
+use Bzrk\Eventsauce\Gcp\Internal\Document;
 use BZRK\PHPStream\StreamException;
 use BZRK\PHPStream\Streams;
 use EventSauce\EventSourcing\AggregateRootId;
-use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository as IMessageRepository;
 use EventSauce\EventSourcing\PaginationCursor;
@@ -112,8 +114,8 @@ class MessageRepository implements IMessageRepository
             ->map(fn(DocumentSnapshot $snapshot) => $this->builder->fromDocumentSnapshot($snapshot))
             ->map(fn(Document $doc) => $this->builder->fromDocument($doc))
             ->toGenerator(
-                fn(Message $msg) => FirestoreCursor::fromString($msg->header(DocumentBuilder::TIMESTAMP)),
-                FirestoreCursor::fromString($cursor->toString())
+                fn(Message $msg) => Cursor::fromString($msg->header(DocumentBuilder::TIMESTAMP)),
+                Cursor::fromString($cursor->toString())
             );
     }
 }
