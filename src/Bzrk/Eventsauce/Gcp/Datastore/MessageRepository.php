@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bzrk\Eventsauce\Gcp\Datastore;
 
 use Bzrk\Eventsauce\Gcp\Cursor;
+use Bzrk\Eventsauce\Gcp\Internal\DocumentBuilder as InternalDocumentBuilder;
 use Bzrk\Eventsauce\Gcp\VersionConstraintException;
 use Bzrk\Eventsauce\Gcp\Internal\Document;
 use BZRK\PHPStream\StreamException;
@@ -68,8 +69,8 @@ class MessageRepository implements IMessageRepository
     {
         $query = $this->client->query()
             ->kind($this->collection)
-            ->filter(DocumentBuilder::AGGREGATE_ID, '=', $id->toString())
-            ->order(DocumentBuilder::VERSION, Query::ORDER_ASCENDING);
+            ->filter(InternalDocumentBuilder::AGGREGATE_ID, '=', $id->toString())
+            ->order(InternalDocumentBuilder::VERSION, Query::ORDER_ASCENDING);
         return $this->map($this->client->runQuery($query));
     }
 
@@ -80,9 +81,9 @@ class MessageRepository implements IMessageRepository
     {
         $query = $this->client->query()
             ->kind($this->collection)
-            ->filter(DocumentBuilder::AGGREGATE_ID, '=', $id->toString())
-            ->filter(DocumentBuilder::VERSION, '>', $aggregateRootVersion)
-            ->order(DocumentBuilder::VERSION, Query::ORDER_ASCENDING);
+            ->filter(InternalDocumentBuilder::AGGREGATE_ID, '=', $id->toString())
+            ->filter(InternalDocumentBuilder::VERSION, '>', $aggregateRootVersion)
+            ->order(InternalDocumentBuilder::VERSION, Query::ORDER_ASCENDING);
         return $this->map($this->client->runQuery($query));
     }
 
@@ -97,18 +98,21 @@ class MessageRepository implements IMessageRepository
             ->toGenerator(fn(Message $msg) => $msg->aggregateVersion());
     }
 
+    /**
+     * @throws StreamException
+     */
     public function paginate(PaginationCursor $cursor): Generator
     {
         $query = $this->client->query()
             ->kind($this->collection)
-            ->filter(DocumentBuilder::TIMESTAMP, '>', $cursor->toString())
-            ->order(DocumentBuilder::TIMESTAMP, Query::ORDER_ASCENDING);
+            ->filter(InternalDocumentBuilder::TIMESTAMP, '>', $cursor->toString())
+            ->order(InternalDocumentBuilder::TIMESTAMP, Query::ORDER_ASCENDING);
 
         return Streams::of($this->client->runQuery($query))
             ->map(fn(Entity $entity) => $this->builder->fromEntity($entity))
             ->map(fn(Document $doc) => $this->builder->fromDocument($doc))
             ->toGenerator(
-                fn(Message $msg) => Cursor::fromString($msg->header(DocumentBuilder::TIMESTAMP)),
+                fn(Message $msg) => Cursor::fromString($msg->header(InternalDocumentBuilder::TIMESTAMP)),
                 Cursor::fromString($cursor->toString())
             );
     }

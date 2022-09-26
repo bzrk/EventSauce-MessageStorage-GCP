@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bzrk\Eventsauce\Gcp\Firestore;
 
 use Bzrk\Eventsauce\Gcp\Cursor;
+use Bzrk\Eventsauce\Gcp\Internal\DocumentBuilder as InternalDocumentBuilder;
 use Bzrk\Eventsauce\Gcp\VersionConstraintException;
 use Bzrk\Eventsauce\Gcp\Internal\Document;
 use BZRK\PHPStream\StreamException;
@@ -47,8 +48,8 @@ class MessageRepository implements IMessageRepository
         $this->client->runTransaction(function (Transaction $transaction) use ($doc) {
             $collection = $this->client->collection($this->collection);
 
-            $docCount = $collection->where(DocumentBuilder::AGGREGATE_ID, '=', $doc->aggregateId)
-                ->where(DocumentBuilder::VERSION, '=', $doc->version())
+            $docCount = $collection->where(InternalDocumentBuilder::AGGREGATE_ID, '=', $doc->aggregateId)
+                ->where(InternalDocumentBuilder::VERSION, '=', $doc->version())
                 ->documents()->size();
 
             if ($docCount == 0) {
@@ -68,8 +69,8 @@ class MessageRepository implements IMessageRepository
     {
         return $this->map(
             $this->client->collection($this->collection)
-                ->where(DocumentBuilder::AGGREGATE_ID, '=', $id->toString())
-                ->orderBy(DocumentBuilder::VERSION)
+                ->where(InternalDocumentBuilder::AGGREGATE_ID, '=', $id->toString())
+                ->orderBy(InternalDocumentBuilder::VERSION)
                 ->documents()
         );
     }
@@ -81,9 +82,9 @@ class MessageRepository implements IMessageRepository
     {
         return $this->map(
             $this->client->collection($this->collection)
-                ->where(DocumentBuilder::AGGREGATE_ID, '=', $id->toString())
-                ->where(DocumentBuilder::VERSION, '>', $aggregateRootVersion)
-                ->orderBy(DocumentBuilder::VERSION)
+                ->where(InternalDocumentBuilder::AGGREGATE_ID, '=', $id->toString())
+                ->where(InternalDocumentBuilder::VERSION, '>', $aggregateRootVersion)
+                ->orderBy(InternalDocumentBuilder::VERSION)
                 ->documents()
         );
     }
@@ -105,8 +106,8 @@ class MessageRepository implements IMessageRepository
     public function paginate(PaginationCursor $cursor): Generator
     {
         $snapshot = $this->client->collection($this->collection)
-            ->where(DocumentBuilder::TIMESTAMP, '>', $cursor->toString())
-            ->orderBy(DocumentBuilder::TIMESTAMP)
+            ->where(InternalDocumentBuilder::TIMESTAMP, '>', $cursor->toString())
+            ->orderBy(InternalDocumentBuilder::TIMESTAMP)
             ->limit(1000)
             ->documents();
 
@@ -114,7 +115,7 @@ class MessageRepository implements IMessageRepository
             ->map(fn(DocumentSnapshot $snapshot) => $this->builder->fromDocumentSnapshot($snapshot))
             ->map(fn(Document $doc) => $this->builder->fromDocument($doc))
             ->toGenerator(
-                fn(Message $msg) => Cursor::fromString($msg->header(DocumentBuilder::TIMESTAMP)),
+                fn(Message $msg) => Cursor::fromString($msg->header(InternalDocumentBuilder::TIMESTAMP)),
                 Cursor::fromString($cursor->toString())
             );
     }
