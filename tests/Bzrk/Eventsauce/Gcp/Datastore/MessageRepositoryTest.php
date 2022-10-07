@@ -162,7 +162,7 @@ class MessageRepositoryTest extends TestCase
         );
 
         $this->expectException(VersionConstraintException::class);
-        $this->expectExceptionMessage("AggregateId: 1-1-1-2, version: 1");
+        $this->expectExceptionMessage("AggregateId: 1-1-1-2::1");
 
         $this->messageRepository->persist($message);
     }

@@ -56,7 +56,7 @@ class MessageRepository implements IMessageRepository
             $this->client->insert($entity);
         } catch (Exception $exception) {
             if ($exception instanceof ConflictException) {
-                throw new VersionConstraintException('AggregateId: 1-1-1-2, version: 1', 0, $exception);
+                throw new VersionConstraintException("AggregateId: $doc->eventId", 0, $exception);
             }
             throw $exception;
         }
