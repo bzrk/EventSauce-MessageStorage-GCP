@@ -42,7 +42,7 @@ class MessageRepositoryTest extends TestCase
     }
 
     /**
-     * @throws StreamException
+     * @throws StreamException|VersionConstraintException
      */
     public function testPersist(): void
     {
@@ -85,7 +85,7 @@ class MessageRepositoryTest extends TestCase
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.728749+0200',
                     Header::AGGREGATE_ROOT_VERSION => 1,
-                    Header::EVENT_ID  => '1-1-1-2::1',
+                    Header::EVENT_ID => '1-1-1-2::1',
                     Header::AGGREGATE_ROOT_ID => '1-1-1-2',
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => '1662977594.728749'
@@ -107,7 +107,7 @@ class MessageRepositoryTest extends TestCase
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::TIME_OF_RECORDING => '2022-09-12 12:13:15.728749+0200',
                     Header::AGGREGATE_ROOT_VERSION => 1,
-                    Header::EVENT_ID  => '1-1-2-2::1',
+                    Header::EVENT_ID => '1-1-2-2::1',
                     Header::AGGREGATE_ROOT_ID => '1-1-2-2',
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => '1662977595.728749'
@@ -124,6 +124,32 @@ class MessageRepositoryTest extends TestCase
     }
 
     /**
+     * @throws StreamException|VersionConstraintException
+     */
+    public function testPersistWithNullValuesInPayload(): void
+    {
+        $message = new Message(
+            new DummyEvent(['a' => 'b', 'c' => null]),
+            [
+                Header::EVENT_ID => "1-1-1-1",
+                Header::AGGREGATE_ROOT_TYPE => "type",
+                Header::AGGREGATE_ROOT_VERSION => 1,
+                Header::EVENT_TYPE => "bzrk.eventsauce.test.firestore.dummy_event",
+                Header::AGGREGATE_ROOT_ID => new DummyId("1-1-1-2"),
+                Header::TIME_OF_RECORDING => "2022-09-12 12:13:14.728749+0200"
+            ]
+        );
+
+        $this->messageRepository->persist($message);
+
+        /** @var EntityInterface[] $docs */
+        $docs = $this->allDocuments()->toList();
+
+        self::assertCount(1, $docs);
+        self::assertEquals(['a' => 'b'], $docs[0]['payload']);
+    }
+
+    /**
      * @throws StreamException
      */
     public function testPersistWithSameAggregateIdAndVersion(): void
@@ -135,7 +161,7 @@ class MessageRepositoryTest extends TestCase
                 Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                 Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.728749+0200',
                 Header::AGGREGATE_ROOT_VERSION => 1,
-                Header::EVENT_ID  => '1-1-1-1',
+                Header::EVENT_ID => '1-1-1-1',
                 Header::AGGREGATE_ROOT_ID => '1-1-1-2',
                 Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                 InternalDocumentBuilder::TIMESTAMP => '1662977595.728749'
@@ -166,8 +192,6 @@ class MessageRepositoryTest extends TestCase
 
         $this->messageRepository->persist($message);
     }
-
-
 
     /**
      * @throws StreamException
@@ -268,7 +292,7 @@ class MessageRepositoryTest extends TestCase
                             Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                             Header::TIME_OF_RECORDING => "2022-09-17 12:1{$cnt}:57.433743+0200",
                             Header::AGGREGATE_ROOT_VERSION => $cnt,
-                            Header::EVENT_ID  => "1-1-1-$cnt",
+                            Header::EVENT_ID => "1-1-1-$cnt",
                             Header::AGGREGATE_ROOT_ID => "1-1-1-1",
                             Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                             InternalDocumentBuilder::TIMESTAMP => "1{$cnt}.433743",
@@ -293,7 +317,7 @@ class MessageRepositoryTest extends TestCase
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::TIME_OF_RECORDING => "2022-09-17 12:13:57.433743+0200",
                     Header::AGGREGATE_ROOT_VERSION => 1,
-                    Header::EVENT_ID  => "2-1-1-1",
+                    Header::EVENT_ID => "2-1-1-1",
                     Header::AGGREGATE_ROOT_ID => "2-1-1-1",
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => "1663409637.433743",
