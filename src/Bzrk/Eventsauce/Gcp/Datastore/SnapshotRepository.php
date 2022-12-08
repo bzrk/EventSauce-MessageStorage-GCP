@@ -19,6 +19,7 @@ class SnapshotRepository implements ISnapshotRepository
     ) {
     }
 
+    // @phpstan-ignore-next-line
     public function persist(Snapshot $snapshot): void
     {
         $this->client->insert(
@@ -36,6 +37,7 @@ class SnapshotRepository implements ISnapshotRepository
         );
     }
 
+    // @phpstan-ignore-next-line
     public function retrieve(AggregateRootId $id): ?Snapshot
     {
         $query = $this->client->query()

@@ -43,5 +43,5 @@ $this->snapshotRepository = new SnapshotRepository(
 docker-compose up
 
 // running qualtity tools
-docker-compose run php --rm composer verify
+docker-compose run --rm php composer verify
 ```
