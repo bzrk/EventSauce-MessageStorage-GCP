@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bzrk\Eventsauce\Gcp\Datastore;
 
 use Bzrk\Eventsauce\Gcp\Cursor;
+use Bzrk\Eventsauce\Gcp\Datastore\DocumentBuilder as DatastoreDocumentBuilder;
 use Bzrk\Eventsauce\Gcp\Internal\DocumentBuilder as InternalDocumentBuilder;
 use Bzrk\Eventsauce\Gcp\VersionConstraintException;
 use Bzrk\Eventsauce\Gcp\Internal\Document;
@@ -25,14 +26,15 @@ use Google\Cloud\Datastore\Query\Query;
 
 class MessageRepository implements IMessageRepository
 {
-    private DocumentBuilder $builder;
+    private DatastoreDocumentBuilder $builder;
 
     public function __construct(
         private readonly DatastoreClient $client,
         private readonly string $collection,
-        MessageSerializer $serializer
+        MessageSerializer $serializer,
+        ?string $keyPrefix = null
     ) {
-        $this->builder = new DocumentBuilder($serializer);
+        $this->builder = new DatastoreDocumentBuilder($serializer, $keyPrefix);
     }
 
     /**
@@ -56,7 +58,7 @@ class MessageRepository implements IMessageRepository
             $this->client->insert($entity);
         } catch (Exception $exception) {
             if ($exception instanceof ConflictException) {
-                throw new VersionConstraintException("AggregateId: $doc->eventId", 0, $exception);
+                throw new VersionConstraintException("EventId: $doc->eventId", 0, $exception);
             }
             throw $exception;
         }
