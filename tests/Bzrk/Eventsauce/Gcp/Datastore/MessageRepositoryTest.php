@@ -37,8 +37,7 @@ class MessageRepositoryTest extends TestCase
         $this->messageRepository = new MessageRepository(
             $this->dataStoreClient,
             self::COLLECTION,
-            new ConstructingMessageSerializer(),
-            'pre'
+            new ConstructingMessageSerializer()
         );
     }
 
@@ -78,7 +77,7 @@ class MessageRepositoryTest extends TestCase
         $docs = $this->allDocuments()->toList();
 
         self::assertCount(2, $docs);
-        self::assertEquals("pre::1-1-1-2::1", $docs[0]->key()->pathEndIdentifier());
+        self::assertEquals("1-1-1-2::1", $docs[0]->key()->pathEndIdentifier());
         self::assertEquals(
             [
                 'headers' => [
@@ -86,7 +85,7 @@ class MessageRepositoryTest extends TestCase
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.728749+0200',
                     Header::AGGREGATE_ROOT_VERSION => 1,
-                    Header::EVENT_ID => 'pre::1-1-1-2::1',
+                    Header::EVENT_ID => '1-1-1-2::1',
                     Header::AGGREGATE_ROOT_ID => '1-1-1-2',
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => '1662977594.728749'
@@ -100,7 +99,7 @@ class MessageRepositoryTest extends TestCase
             ],
             $docs[0]->get()
         );
-        self::assertEquals("pre::1-1-2-2::1", $docs[1]->key()->pathEndIdentifier());
+        self::assertEquals("1-1-2-2::1", $docs[1]->key()->pathEndIdentifier());
         self::assertEquals(
             [
                 'headers' => [
@@ -108,7 +107,7 @@ class MessageRepositoryTest extends TestCase
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::TIME_OF_RECORDING => '2022-09-12 12:13:15.728749+0200',
                     Header::AGGREGATE_ROOT_VERSION => 1,
-                    Header::EVENT_ID => 'pre::1-1-2-2::1',
+                    Header::EVENT_ID => '1-1-2-2::1',
                     Header::AGGREGATE_ROOT_ID => '1-1-2-2',
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => '1662977595.728749'
@@ -155,14 +154,14 @@ class MessageRepositoryTest extends TestCase
      */
     public function testPersistWithSameAggregateIdAndVersion(): void
     {
-        $key = $this->dataStoreClient->key(self::COLLECTION, "pre::1-1-1-2::1");
+        $key = $this->dataStoreClient->key(self::COLLECTION, "1-1-1-2::1");
         $entity = $this->dataStoreClient->entity($key, [
             'headers' => [
                 Header::AGGREGATE_ROOT_TYPE => 'type',
                 Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                 Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.728749+0200',
                 Header::AGGREGATE_ROOT_VERSION => 1,
-                Header::EVENT_ID => 'pre::1-1-1-2::1',
+                Header::EVENT_ID => '1-1-1-1',
                 Header::AGGREGATE_ROOT_ID => '1-1-1-2',
                 Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                 InternalDocumentBuilder::TIMESTAMP => '1662977595.728749'
@@ -189,7 +188,7 @@ class MessageRepositoryTest extends TestCase
         );
 
         $this->expectException(VersionConstraintException::class);
-        $this->expectExceptionMessage("EventId: pre::1-1-1-2::1");
+        $this->expectExceptionMessage("AggregateId: 1-1-1-2::1");
 
         $this->messageRepository->persist($message);
     }
@@ -211,7 +210,7 @@ class MessageRepositoryTest extends TestCase
                 Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                 Header::TIME_OF_RECORDING => '2022-09-17 12:11:57.433743+0200',
                 Header::AGGREGATE_ROOT_VERSION => 1,
-                Header::EVENT_ID => 'pre::1-1-1-1::1',
+                Header::EVENT_ID => '1-1-1-1',
                 Header::AGGREGATE_ROOT_ID => new DummyId('1-1-1-1'),
                 Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                 InternalDocumentBuilder::TIMESTAMP => '11.433743'
@@ -243,7 +242,7 @@ class MessageRepositoryTest extends TestCase
                 Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                 Header::TIME_OF_RECORDING => '2022-09-17 12:13:57.433743+0200',
                 Header::AGGREGATE_ROOT_VERSION => 3,
-                Header::EVENT_ID => 'pre::1-1-1-3::3',
+                Header::EVENT_ID => '1-1-1-3',
                 Header::AGGREGATE_ROOT_ID => new DummyId('1-1-1-1'),
                 Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                 InternalDocumentBuilder::TIMESTAMP => '13.433743'
@@ -293,7 +292,7 @@ class MessageRepositoryTest extends TestCase
                             Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                             Header::TIME_OF_RECORDING => "2022-09-17 12:1{$cnt}:57.433743+0200",
                             Header::AGGREGATE_ROOT_VERSION => $cnt,
-                            Header::EVENT_ID => "pre::1-1-1-$cnt::$cnt",
+                            Header::EVENT_ID => "1-1-1-$cnt",
                             Header::AGGREGATE_ROOT_ID => "1-1-1-1",
                             Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                             InternalDocumentBuilder::TIMESTAMP => "1{$cnt}.433743",
@@ -318,7 +317,7 @@ class MessageRepositoryTest extends TestCase
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::TIME_OF_RECORDING => "2022-09-17 12:13:57.433743+0200",
                     Header::AGGREGATE_ROOT_VERSION => 1,
-                    Header::EVENT_ID => "pre::2-1-1-1",
+                    Header::EVENT_ID => "2-1-1-1",
                     Header::AGGREGATE_ROOT_ID => "2-1-1-1",
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => "1663409637.433743",

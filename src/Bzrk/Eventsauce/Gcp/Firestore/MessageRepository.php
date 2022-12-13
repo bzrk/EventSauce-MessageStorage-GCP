@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Bzrk\Eventsauce\Gcp\Firestore;
 
 use Bzrk\Eventsauce\Gcp\Cursor;
-use Bzrk\Eventsauce\Gcp\Firestore\DocumentBuilder as FirestoreDocumentBuilder;
 use Bzrk\Eventsauce\Gcp\Internal\DocumentBuilder as InternalDocumentBuilder;
 use Bzrk\Eventsauce\Gcp\VersionConstraintException;
 use Bzrk\Eventsauce\Gcp\Internal\Document;
@@ -24,14 +23,14 @@ use Google\Cloud\Firestore\Transaction;
 
 class MessageRepository implements IMessageRepository
 {
-    private FirestoreDocumentBuilder $builder;
+    private DocumentBuilder $builder;
 
     public function __construct(
         private readonly FirestoreClient $client,
         private readonly string $collection,
         MessageSerializer $serializer
     ) {
-        $this->builder = new FirestoreDocumentBuilder($serializer);
+        $this->builder = new DocumentBuilder($serializer);
     }
 
     /**
