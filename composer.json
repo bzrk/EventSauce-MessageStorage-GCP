@@ -12,7 +12,7 @@
     "php": ">=8.1",
     "eventsauce/eventsauce": "^3.0",
     "google/cloud-firestore": "^1.25",
-    "bzrk/php-stream": "^0.16.0",
+    "bzrk/php-stream": ">0.16",
     "ramsey/uuid": "*",
     "webmozart/assert": "^1.11",
     "google/cloud-datastore": "^1.16"

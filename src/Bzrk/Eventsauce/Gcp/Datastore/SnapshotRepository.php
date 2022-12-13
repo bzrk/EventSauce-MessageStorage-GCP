@@ -19,6 +19,10 @@ class SnapshotRepository implements ISnapshotRepository
     ) {
     }
 
+    /**
+     * @param Snapshot<mixed> $snapshot
+     * @return void
+     */
     public function persist(Snapshot $snapshot): void
     {
         $this->client->insert(
@@ -36,6 +40,10 @@ class SnapshotRepository implements ISnapshotRepository
         );
     }
 
+    /**
+     * @param AggregateRootId $id
+     * @return Snapshot<mixed>|null
+     */
     public function retrieve(AggregateRootId $id): ?Snapshot
     {
         $query = $this->client->query()
