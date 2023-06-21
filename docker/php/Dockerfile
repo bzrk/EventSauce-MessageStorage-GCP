@@ -1,4 +1,4 @@
-FROM php:8.1-cli
+FROM php:8.1-cli-bullseye
 
 RUN apt -y update && \
     apt install -y git libzip-dev zip
@@ -6,6 +6,4 @@ RUN apt -y update && \
 RUN pecl install grpc-1.48.1 && \
     docker-php-ext-enable grpc
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php --install-dir=/usr/bin --filename=composer && \
-    php -r "unlink('composer-setup.php');"
+COPY --from=composer /usr/bin/composer /usr/bin/composer
