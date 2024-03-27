@@ -51,7 +51,11 @@ class MessageRepository implements IMessageRepository
     private function store(Document $doc): void
     {
         $key = $this->client->key($this->collection, $doc->eventId);
-        $entity = $this->client->entity($key, $doc->payload);
+        $entity = $this->client->entity(
+            $key,
+            $doc->payload,
+            ['excludeFromIndexes' => [InternalDocumentBuilder::PAYLOAD, InternalDocumentBuilder::HEADERS]]
+        );
         try {
             $this->client->insert($entity);
         } catch (Exception $exception) {
