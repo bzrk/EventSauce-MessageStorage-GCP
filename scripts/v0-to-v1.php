@@ -30,7 +30,7 @@ list($script, $projectId, $databaseId, $collection) = $args;
 $client = new Google\Cloud\Datastore\DatastoreClient(
     [
         'projectId'  => $projectId,
-        'databaseId' => $databaseId
+        'databaseId' => $databaseId == '(default)' ? '' : $databaseId,
     ]
 );
 
