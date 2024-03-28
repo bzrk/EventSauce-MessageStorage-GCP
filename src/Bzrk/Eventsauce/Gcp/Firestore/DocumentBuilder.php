@@ -18,7 +18,7 @@ class DocumentBuilder extends AbstractDocumentBuilder
      */
     protected function generateKey(array $payload): string
     {
-        return $payload['headers'][Header::EVENT_ID] ?? Uuid::uuid4()->toString();
+        return $payload[self::HEADERS][Header::EVENT_ID] ?? Uuid::uuid4()->toString();
     }
 
     public function fromDocumentSnapshot(DocumentSnapshot $snapshot): Document

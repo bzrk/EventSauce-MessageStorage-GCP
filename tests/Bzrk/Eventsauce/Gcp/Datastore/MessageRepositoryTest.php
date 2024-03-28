@@ -80,20 +80,20 @@ class MessageRepositoryTest extends TestCase
         self::assertEquals("1-1-1-2::1", $docs[0]->key()->pathEndIdentifier());
         self::assertEquals(
             [
-                'headers' => [
-                    Header::AGGREGATE_ROOT_TYPE => 'type',
-                    Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
-                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.728749+0200',
-                    Header::AGGREGATE_ROOT_VERSION => 1,
+                'headers' => json_encode([
                     Header::EVENT_ID => '1-1-1-2::1',
+                    Header::AGGREGATE_ROOT_TYPE => 'type',
+                    Header::AGGREGATE_ROOT_VERSION => 1,
+                    Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::AGGREGATE_ROOT_ID => '1-1-1-2',
+                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:14.728749+0200',
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => '1662977594.728749'
-                ],
+                ]),
                 'version' => 1,
                 'aggregate' => 'type',
                 'aggregateId' => '1-1-1-2',
-                'payload' => ['a' => 'b'],
+                'payload' => json_encode(['a' => 'b']),
                 'timestamp' => '1662977594.728749',
                 'event' => 'bzrk.eventsauce.test.firestore.dummy_event'
             ],
@@ -102,20 +102,20 @@ class MessageRepositoryTest extends TestCase
         self::assertEquals("1-1-2-2::1", $docs[1]->key()->pathEndIdentifier());
         self::assertEquals(
             [
-                'headers' => [
-                    Header::AGGREGATE_ROOT_TYPE => 'type',
-                    Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
-                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:15.728749+0200',
-                    Header::AGGREGATE_ROOT_VERSION => 1,
+                'headers' => json_encode([
                     Header::EVENT_ID => '1-1-2-2::1',
+                    Header::AGGREGATE_ROOT_TYPE => 'type',
+                    Header::AGGREGATE_ROOT_VERSION => 1,
+                    Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::AGGREGATE_ROOT_ID => '1-1-2-2',
+                    Header::TIME_OF_RECORDING => '2022-09-12 12:13:15.728749+0200',
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => '1662977595.728749'
-                ],
+                ]),
                 'version' => 1,
                 'aggregate' => 'type',
                 'aggregateId' => '1-1-2-2',
-                'payload' => ['b' => 'c'],
+                'payload' => json_encode(['b' => 'c']),
                 'timestamp' => '1662977595.728749',
                 'event' => 'bzrk.eventsauce.test.firestore.dummy_event'
             ],
@@ -146,7 +146,7 @@ class MessageRepositoryTest extends TestCase
         $docs = $this->allDocuments()->toList();
 
         self::assertCount(1, $docs);
-        self::assertEquals(['a' => 'b'], $docs[0]['payload']);
+        self::assertEquals(json_encode(['a' => 'b']), $docs[0]['payload']);
     }
 
     /**
@@ -287,7 +287,7 @@ class MessageRepositoryTest extends TestCase
                 $entity = $this->dataStoreClient->entity(
                     $key,
                     [
-                        'headers' => [
+                        'headers' => json_encode([
                             Header::AGGREGATE_ROOT_TYPE => "type",
                             Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                             Header::TIME_OF_RECORDING => "2022-09-17 12:1{$cnt}:57.433743+0200",
@@ -296,11 +296,11 @@ class MessageRepositoryTest extends TestCase
                             Header::AGGREGATE_ROOT_ID => "1-1-1-1",
                             Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                             InternalDocumentBuilder::TIMESTAMP => "1{$cnt}.433743",
-                        ],
+                        ]),
                         'version' => $cnt,
                         'aggregate' => 'type',
                         'aggregateId' => "1-1-1-1",
-                        'payload' => ['a' => 'b'],
+                        'payload' => json_encode(['a' => 'b']),
                         'timestamp' => "1{$cnt}.433743",
                         'event' => 'eventType'
                     ]
@@ -312,7 +312,7 @@ class MessageRepositoryTest extends TestCase
         $entity = $this->dataStoreClient->entity(
             $key,
             [
-                'headers' => [
+                'headers' => json_encode([
                     Header::AGGREGATE_ROOT_TYPE => "type",
                     Header::EVENT_TYPE => 'bzrk.eventsauce.test.firestore.dummy_event',
                     Header::TIME_OF_RECORDING => "2022-09-17 12:13:57.433743+0200",
@@ -321,11 +321,11 @@ class MessageRepositoryTest extends TestCase
                     Header::AGGREGATE_ROOT_ID => "2-1-1-1",
                     Header::AGGREGATE_ROOT_ID_TYPE => 'bzrk.eventsauce.test.firestore.dummy_id',
                     InternalDocumentBuilder::TIMESTAMP => "1663409637.433743",
-                ],
+                ]),
                 'version' => 1,
                 'aggregate' => 'type',
                 'aggregateId' => "2-1-1-1",
-                'payload' => ['a' => 'b'],
+                'payload' => json_encode(['a' => 'b']),
                 'timestamp' => "1663409637.433743",
                 'event' => 'bzrk.eventsauce.test.firestore.dummy_event'
             ]

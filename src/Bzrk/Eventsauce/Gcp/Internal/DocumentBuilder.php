@@ -16,6 +16,8 @@ abstract class DocumentBuilder
     public const AGGREGATE    = 'aggregate';
     public const AGGREGATE_ID = 'aggregateId';
     public const TIMESTAMP    = 'timestamp';
+    public const PAYLOAD    = 'payload';
+    public const HEADERS    = 'headers';
 
     public function __construct(private readonly MessageSerializer $serializer)
     {
@@ -25,21 +27,21 @@ abstract class DocumentBuilder
     {
         $payload = $this->serializer->serializeMessage($msg);
 
-        $payload['payload'] = Streams::of($payload['payload'])
+        $payload[self::PAYLOAD] = Streams::of($payload[self::PAYLOAD])
             ->filter(fn($var) => !is_null($var))
             ->toList(true);
 
-        $payload['headers'][Header::EVENT_ID] = $this->generateKey($payload);
-        $payload['headers'][self::TIMESTAMP] = $msg->timeOfRecording()->format('U.u');
-        $payload[self::AGGREGATE] = $payload['headers'][Header::AGGREGATE_ROOT_TYPE];
-        $payload[self::VERSION] = $payload['headers'][Header::AGGREGATE_ROOT_VERSION];
-        $payload[self::EVENT] = $payload['headers'][Header::EVENT_TYPE];
-        $payload[self::AGGREGATE_ID] = $payload['headers'][Header::AGGREGATE_ROOT_ID];
-        $payload[self::TIMESTAMP] = $payload['headers'][self::TIMESTAMP];
+        $payload[self::HEADERS][Header::EVENT_ID] = $this->generateKey($payload);
+        $payload[self::HEADERS][self::TIMESTAMP] = $msg->timeOfRecording()->format('U.u');
+        $payload[self::AGGREGATE] = $payload[self::HEADERS][Header::AGGREGATE_ROOT_TYPE];
+        $payload[self::VERSION] = $payload[self::HEADERS][Header::AGGREGATE_ROOT_VERSION];
+        $payload[self::EVENT] = $payload[self::HEADERS][Header::EVENT_TYPE];
+        $payload[self::AGGREGATE_ID] = $payload[self::HEADERS][Header::AGGREGATE_ROOT_ID];
+        $payload[self::TIMESTAMP] = $payload[self::HEADERS][self::TIMESTAMP];
 
         return new Document(
             $msg->aggregateRootId()->toString(),
-            $payload['headers'][Header::EVENT_ID],
+            $payload[self::HEADERS][Header::EVENT_ID],
             $payload
         );
     }
