@@ -10,6 +10,8 @@ use BZRK\PHPStream\Streams;
 use EventSauce\EventSourcing\Snapshotting\Snapshot;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class SnapshotRepositoryTest extends TestCase
@@ -23,6 +25,7 @@ class SnapshotRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
+    #[Before]
     protected function setUp(): void
     {
         $this->datastoreClient = new DatastoreClient();
@@ -39,7 +42,8 @@ class SnapshotRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testPersist(): void
+    #[Test]
+    public function persist(): void
     {
         $state = ['state' => 'state', 'foo' => 'bar'];
 
@@ -60,7 +64,8 @@ class SnapshotRepositoryTest extends TestCase
         self::assertEquals($state, $entities[0]->get()['state']);
     }
 
-    public function testRetrieveNotFoundASnapshot(): void
+    #[Test]
+    public function retrieveNotFoundASnapshot(): void
     {
         Streams::range(1, 2)->each(
             fn(int $cnt) => $this->datastoreClient->insert(
@@ -78,7 +83,8 @@ class SnapshotRepositoryTest extends TestCase
         self::assertNull($this->snapshotRepository->retrieve(new DummyId('1-1-1-1')));
     }
 
-    public function testRetrieve(): void
+    #[Test]
+    public function retrieve(): void
     {
         Streams::range(1, 5)->each(
             fn(int $cnt) => $this->datastoreClient->insert(

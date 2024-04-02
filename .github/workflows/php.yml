@@ -7,7 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        php_version: [ 8.1 ]
+        php_version: [ 8.2 ]
     runs-on: ubuntu-latest
     env:
       FIRESTORE_EMULATOR_HOST: localhost:8080
