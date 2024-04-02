@@ -6,22 +6,19 @@ namespace Bzrk\Eventsauce\Gcp\Internal;
 
 use Bzrk\Eventsauce\Gcp\Firestore\DocumentBuilder;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class DocumentTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function extractVersionFromPayload(): void
     {
         $document = new Document('id', 'eid', [DocumentBuilder::VERSION => 4]);
         self::assertThat($document->version(), self::equalTo(4));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function extractVersionFromPayloadThrowsExceptionIfNotExists(): void
     {
         $document = new Document('id', 'eid', []);

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Bzrk\Eventsauce\Gcp;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class CursorTest extends TestCase
 {
-    public function testFromStart(): void
+    #[Test]
+    public function fromStart(): void
     {
         $cursor = Cursor::fromStart();
 
@@ -16,7 +18,8 @@ class CursorTest extends TestCase
         self::assertTrue($cursor->isAtStart());
     }
 
-    public function testFromString(): void
+    #[Test]
+    public function fromString(): void
     {
         $cursor = Cursor::fromString("foobar");
 

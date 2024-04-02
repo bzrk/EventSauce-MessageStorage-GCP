@@ -17,6 +17,8 @@ use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use Google\Cloud\Firestore\CollectionReference;
 use Google\Cloud\Firestore\DocumentReference;
 use Google\Cloud\Firestore\FirestoreClient;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class MessageRepositoryTest extends TestCase
@@ -27,9 +29,9 @@ class MessageRepositoryTest extends TestCase
     private MessageRepository $messageRepository;
 
     /**
-     * @before
      * @throws StreamException
      */
+    #[Before]
     protected function setUp(): void
     {
         $firestoreClient = new FirestoreClient();
@@ -48,7 +50,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testPersist(): void
+    #[Test]
+    public function persist(): void
     {
         $messages = [
             new Message(
@@ -130,7 +133,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testPersistWithSameAggregateIdAndVersion(): void
+    #[Test]
+    public function persistWithSameAggregateIdAndVersion(): void
     {
         $this->collectionReference->document("1-1-1-3")->set(
             [
@@ -174,7 +178,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testRetrieveAll(): void
+    #[Test]
+    public function retrieveAll(): void
     {
         $this->initForRetrieveOrPaginate();
 
@@ -206,7 +211,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testRetrieveAfterVersion(): void
+    #[Test]
+    public function retrieveAfterVersion(): void
     {
         $this->initForRetrieveOrPaginate();
 
@@ -234,7 +240,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testPaginate(): void
+    #[Test]
+    public function paginate(): void
     {
         $this->initForRetrieveOrPaginate();
 
@@ -263,7 +270,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testPaginateHandleEmptyResult(): void
+    #[Test]
+    public function paginateHandleEmptyResult(): void
     {
         $this->initForRetrieveOrPaginate();
 

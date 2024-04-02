@@ -17,6 +17,8 @@ use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\EntityInterface;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class MessageRepositoryTest extends TestCase
@@ -29,6 +31,7 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
+    #[Before]
     protected function setUp(): void
     {
         $this->dataStoreClient = new DatastoreClient();
@@ -44,7 +47,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException|VersionConstraintException
      */
-    public function testPersist(): void
+    #[Test]
+    public function persist(): void
     {
         $messages = [
             new Message(
@@ -126,7 +130,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException|VersionConstraintException
      */
-    public function testPersistWithNullValuesInPayload(): void
+    #[Test]
+    public function persistWithNullValuesInPayload(): void
     {
         $message = new Message(
             new DummyEvent(['a' => 'b', 'c' => null]),
@@ -152,7 +157,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testPersistWithSameAggregateIdAndVersion(): void
+    #[Test]
+    public function persistWithSameAggregateIdAndVersion(): void
     {
         $key = $this->dataStoreClient->key(self::COLLECTION, "1-1-1-2::1");
         $entity = $this->dataStoreClient->entity($key, [
@@ -196,7 +202,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testRetrieveAll(): void
+    #[Test]
+    public function retrieveAll(): void
     {
         $this->initForRetrieveOrPaginate();
 
@@ -228,7 +235,8 @@ class MessageRepositoryTest extends TestCase
     /**
      * @throws StreamException
      */
-    public function testRetrieveAfterVersion(): void
+    #[Test]
+    public function retrieveAfterVersion(): void
     {
         $this->initForRetrieveOrPaginate();
 
@@ -253,7 +261,8 @@ class MessageRepositoryTest extends TestCase
         self::assertEquals(4, $messages[1]->aggregateVersion());
     }
 
-    public function testPaginate(): void
+    #[Test]
+    public function paginate(): void
     {
         $this->initForRetrieveOrPaginate();
 
