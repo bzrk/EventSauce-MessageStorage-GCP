@@ -343,6 +343,7 @@ class MessageRepositoryTest extends TestCase
     }
 
     /**
+     * @return Stream<int, mixed>
      * @throws StreamException
      */
     private function allDocuments(): Stream

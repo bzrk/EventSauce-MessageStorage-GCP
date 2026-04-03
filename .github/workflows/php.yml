@@ -7,40 +7,50 @@ jobs:
   build:
     strategy:
       matrix:
-        php_version: [ 8.2 ]
+        php_version: [ 8.4, 8.5 ]
     runs-on: ubuntu-latest
     env:
       FIRESTORE_EMULATOR_HOST: localhost:8080
       FIRESTORE_PROJECT_ID: eventsauce
-      DATASTORE_EMULATOR_HOST: localhost:8282
+      DATASTORE_EMULATOR_HOST: localhost:8082
       DATASTORE_PROJECT_ID: eventsauce
     services:
       firestore:
-        image: mtlynch/firestore-emulator-docker
-        env:
-          PORT: 8080
-          FIRESTORE_PROJECT_ID: eventsauce
+        image: google/cloud-sdk:emulators
+        options: --entrypoint /bin/bash
+        command: -c "gcloud beta emulators firestore start --host-port=0.0.0.0:8080 --project=eventsauce"
         ports:
           - 8080:8080
       datastore:
-        image: egymgmbh/datastore-emulator
-        env:
-          PORT: 8282
-          DATASTORE_PROJECT_ID: eventsauce
+        image: google/cloud-sdk:emulators
+        options: --entrypoint /bin/bash
+        command: -c "gcloud beta emulators datastore start --host-port=0.0.0.0:8082 --project=eventsauce --consistency=1.0"
         ports:
-          - 8282:8282
+          - 8082:8082
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Show Env Variables
-        run: echo $FIRESTORE_EMULATOR_HOST; echo $FIRESTORE_PROJECT_ID
+      - name: Setup PHP extensions cache
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php_version }}
+          extensions: phar, grpc-1.80.0
+          key: php-ext-${{ matrix.php_version }}-v1
 
-      - name: Verify
+      - name: Cache PHP extensions
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_version }}
-          extensions: phar, grpc
+          extensions: phar, grpc-1.80.0
           coverage: none
           tools: composer:v2
 
