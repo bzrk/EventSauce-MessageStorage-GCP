@@ -1,7 +1,6 @@
-version: "3.0"
 services:
   php:
-    image: eventsauce-messagestorage-gcp-php
+    image: bzrk/eventsauce-messagestorage-gcp-php
     build: docker/php
     container_name: eventsauce-messagestorage-gcp-php
     working_dir: /app
@@ -11,23 +10,48 @@ services:
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
       FIRESTORE_PROJECT_ID: eventsauce
-      DATASTORE_EMULATOR_HOST: datastore:8282
+      DATASTORE_EMULATOR_HOST: datastore:8082
+      DATASTORE_PROJECT_ID: eventsauce
+    command: composer install
+  php84:
+    image: bzrk/eventsauce-messagestorage-gcp-php84
+    build:
+      context: docker/php
+      args:
+        PHP_VERSION: 8.4
+    container_name: eventsauce-messagestorage-gcp-php84
+    working_dir: /app
+    volumes:
+      - "./:/app"
+    restart: "no"
+    environment:
+      FIRESTORE_EMULATOR_HOST: firestore:8080
+      FIRESTORE_PROJECT_ID: eventsauce
+      DATASTORE_EMULATOR_HOST: datastore:8082
       DATASTORE_PROJECT_ID: eventsauce
     command: composer install
   firestore:
-    image: mtlynch/firestore-emulator-docker
+    image: bzrk/gcloud-firestore
+    build: 
+      context: docker/gcloud
+      dockerfile: Dockerfile
+      target: firestore
     container_name: eventsauce-messagestorage-gcp-firestore-emulator
     environment:
       PORT: 8080
-      FIRESTORE_PROJECT_ID: eventsauce
+      PROJECT_ID: eventsauce
     ports:
       - "8080:8080"
   datastore:
-    image: egymgmbh/datastore-emulator
+    image: bzrk/gcloud-datastore
+    build: 
+      context: docker/gcloud
+      dockerfile: Dockerfile
+      target: datastore
     container_name: eventsauce-messagestorage-gcp-datastore-emulator
     environment:
-      PORT: 8282
-      DATASTORE_PROJECT_ID: eventsauce
+      PORT: 8082
+      PROJECT_ID: eventsauce
     ports:
-      - "8282:8282"
+      - "8082:8082"
 
